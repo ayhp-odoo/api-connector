@@ -41,10 +41,11 @@ class ApiCall(models.Model):
         #      'Content-type': 'text/xml',
         #      #'body': self.payload
         # }
-
-        xml = self.payload
-        # set the type of payload the API accepts
         headers = {'Content-Type': 'text/xml'}
-        api_result = requests.post(self.url,  data=xml, headers=headers)
-        raise UserError(api_result.json().get(
-            'recived data').get('note').get('to')[0])
+        xml = self.payload
+        if self.method == 'get':
+            api_result = requests.get(self.url,  self.body)
+        else:
+            api_result = requests.post(self.url,  data=xml, headers=headers)
+            raise UserError(api_result.json().get(
+                'recived data').get('note').get('to')[0])
