@@ -17,6 +17,7 @@
                         <field name="url"/>
                         <field name="access_key"/>
                         <field name="method"/>
+                        <field name="content_type"/>
                         <field name="headers" />
                         <field name="body" attrs="{'invisible': [('method', '!=', 'get')]}"/>
                         <field name="query" attrs="{'invisible': [('method', '!=', 'get')]}"/>

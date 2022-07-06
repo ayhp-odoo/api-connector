@@ -22,6 +22,11 @@ class IrActionsServer(models.Model):
         required=True,
         default='get'
     )
+    content_type = fields.Selection(
+        selection=[('text/xml', 'XML'), ('application/json', 'JSON')],
+        string='Content Type',
+        required=True,
+    )
     headers = fields.Text(string='Headers')
     body = fields.Text(string='Body')
     response_type = fields.Selection(
@@ -44,7 +49,7 @@ class IrActionsServer(models.Model):
             if not val.get('url'):
                 raise UserError('API must have a url')
             xml = val.get('payload')
-            headers = {'Content-Type': 'text/xml'}
+            headers = {'Content-Type': val.get('content_type')}
             api_result = requests.post(
                 val.get('url'),  data=xml, headers=headers)
             print(api_result.json())
@@ -59,7 +64,7 @@ class IrActionsServer(models.Model):
         #      'Content-type': 'text/xml',
         #      #'body': self.payload
         # }
-        headers = {'Content-Type': 'text/xml'}
+        headers = {'Content-Type': self.content_type}
         xml = self.payload
         if self.method == 'get':
             api_result = requests.get(self.url,  self.body)
