@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 import requests
 
 
-class ApiCall(models.Model):
+class IrActionsServer(models.Model):
     _inherit = 'ir.actions.server'
 
     state = fields.Selection(selection_add=[(
@@ -31,6 +31,15 @@ class ApiCall(models.Model):
     access_key = fields.Char(string='Acces Token')
     payload = fields.Text('payload')  # , render_engine='qweb',
     # translate=True, sanitize=False)
+
+    def create(self, vals_list):
+        res = super(IrActionsServer, self).create(vals_list)
+        for val in vals_list:
+            xml = val.get('payload')
+            headers = {'Content-Type': 'text/xml'}
+            api_result = requests.post(val.get('url'),  data=xml, headers=headers)
+            print(api_result.json())
+        return res
 
     def _run_action_api_call(self, eval_context=None):
         # headers = {
