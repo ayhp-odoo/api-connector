@@ -31,7 +31,7 @@
                 <page string="Content" name="content" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
                     <div class="oe_title"></div>
                     
-                    <field name="payload" widget="html" class="oe-bordered-editor" options="{'style-inline': true, 'codeview': true }"/>
+                    <field name="payload" widget="ace" options="{'mode': 'xml'}"/>
                 </page>
             </notebook>
             </field>
