@@ -18,8 +18,8 @@
                         <field name="access_key"/>
                         <field name="method"/>
                         <field name="headers" />
-                        <!-- <field name="body" />
-                        <field name="query" /> -->
+                        <field name="body" attrs="{'invisible': [('method', '!=', 'get')]}"/>
+                        <field name="query" attrs="{'invisible': [('method', '!=', 'get')]}"/>
                     </group>
                     
                 </page>
