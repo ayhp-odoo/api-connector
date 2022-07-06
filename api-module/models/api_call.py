@@ -29,8 +29,8 @@ class ApiCall(models.Model):
 
     query = fields.Char(string='Query')
     access_key = fields.Char(string='access_key')
-    payload = fields.Text('payload', render_engine='qweb',
-                          translate=True, sanitize=False)
+    payload = fields.Text('payload')  # , render_engine='qweb',
+    # translate=True, sanitize=False)
 
     def _run_action_api_call(self, eval_context=None):
         # headers = {
@@ -43,7 +43,8 @@ class ApiCall(models.Model):
         # }
 
         xml = self.payload
-        headers = {'Content-Type': 'text/xml'}  # set what your server accepts
+        # set the type of payload the API accepts
+        headers = {'Content-Type': 'text/xml'}
         api_result = requests.post(self.url,  data=xml, headers=headers)
         raise UserError(api_result.json().get(
             'recived data').get('note').get('to')[0])
