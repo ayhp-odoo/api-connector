@@ -28,7 +28,7 @@ class ApiCall(models.Model):
     )
 
     query = fields.Char(string='Query')
-    access_key = fields.Char(string='access_key')
+    access_key = fields.Char(string='Acces Token')
     payload = fields.Text('payload')  # , render_engine='qweb',
     # translate=True, sanitize=False)
 
