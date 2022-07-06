@@ -18,4 +18,4 @@ print(type(requests.post(
 #api_response = api_result.json()
 
 # print(f"\n\n\n{api_response}\n\n\n")
-#print(f"\n\n\n{type(api_result)}\n\n\n")
+# print(f"\n\n\n{type(api_result)}\n\n\n")

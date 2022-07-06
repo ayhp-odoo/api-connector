@@ -7,12 +7,12 @@
     'author': 'Odoo PS',
     'category': 'Sales',
     'version': '15.0.1.0.0',
-    'depends': ['sale','web'],
+    'depends': ['sale', 'web'],
     'license': 'OPL-1',
     'data': [
         'views/view_base_automation_inherit.xml'
     ],
     'external_dependencies': {
-   'python': ['xmltodict'],
-}
+        'python': ['xmltodict'],
+    }
 }
