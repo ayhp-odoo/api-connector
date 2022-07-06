@@ -9,9 +9,9 @@ class IrActionsServer(models.Model):
     state = fields.Selection(selection_add=[(
         'api_call', 'Call External API')], ondelete={'api_call': 'cascade'})
 
-    api_name = fields.Char(string='Name', required=True)
+    api_name = fields.Char(string='Name')
     description = fields.Text(string='Description')
-    url = fields.Char(string='URL', required=True)
+    url = fields.Char(string='URL')
     method = fields.Selection(
         selection=[('get', 'GET'), ('post', 'POST')],
         string='Method',
@@ -35,9 +35,14 @@ class IrActionsServer(models.Model):
     def create(self, vals_list):
         res = super(IrActionsServer, self).create(vals_list)
         for val in vals_list:
+            if not val.get('api_name'):
+                raise UserError('API must have a name')
+            if not val.get('url'):
+                raise UserError('API must have a url')
             xml = val.get('payload')
             headers = {'Content-Type': 'text/xml'}
-            api_result = requests.post(val.get('url'),  data=xml, headers=headers)
+            api_result = requests.post(
+                val.get('url'),  data=xml, headers=headers)
             print(api_result.json())
         return res
 
