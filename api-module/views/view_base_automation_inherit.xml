@@ -8,23 +8,27 @@
            <field name="inherit_id" ref="base.view_server_action_form"/>
            <field name='arch' type='xml'>
             <notebook position="inside">
-                <page string="API headers" name="api_headers" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
-                    <group name="General info">
+                <page string="API Info" name="api_headers" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
+                    <group>
                        <group>
                         <field name="description"/>
-                       </group>
-                    </group>
-                    <group name="API headers">
-                       <group>
                         <field name="url"/>
+                    </group>
+                    <group>
                         <field name="method"/>
                         <field name="content_type"/>
-                        <field name="headers" />
                        </group>
                     </group>
+                    <form>
+                        <group>
+                            <field name="headers" widget="ace"/>
+                        </group>
+                    </form>
+                    
+                    
                     
                 </page>
-                <page string="API Payload" name="api_payload" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
+                <page string="Payload" name="api_payload" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
                     <field name="payload" widget="ace" options="{'mode': 'xml'}"/>
                 </page>
             </notebook>

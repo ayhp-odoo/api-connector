@@ -24,13 +24,17 @@ class IrActionsServer(models.Model):
         string='Content Type',
         required=True,
     )
-    headers = fields.One2many(string='Headers', inverse_name='api_id' ,comodel_name='api.header')
-    payload = fields.Text() 
+    # headers = fields.One2many(
+    #     string='Headers', inverse_name='server_id', comodel_name='api.header')
+    headers = fields.Text(
+        string='Headers')
+
+    payload = fields.Text()
 
     def create(self, vals_list):
         res = super(IrActionsServer, self).create(vals_list)
         for val in vals_list:
-            if val.get('state') == 'api_call':    
+            if val.get('state') == 'api_call':
                 if not val.get('url'):
                     raise UserError('API must have a url')
                 xml = val.get('payload')
@@ -49,7 +53,7 @@ class IrActionsServer(models.Model):
             api_result = requests.post(self.url,  data=xml, headers=headers)
             raise UserError(api_result.json())
 
-    def xml2dict(self,t):
+    def xml2dict(self, t):
         d = {t.tag: {} if t.attrib else None}
         children = list(t)
         if children:
@@ -71,7 +75,7 @@ class IrActionsServer(models.Model):
                 d[t.tag] = text
         return d
 
-    def json2xml(self,json_obj, line_padding="", origin_obj=None):
+    def json2xml(self, json_obj, line_padding="", origin_obj=None):
         result_list = list()
 
         json_obj_type = type(json_obj)
@@ -79,7 +83,8 @@ class IrActionsServer(models.Model):
         if json_obj_type is list:
             for sub_elem in json_obj:
                 result_list.append("%s<%s>" % (line_padding, origin_obj))
-                result_list.append(self.json2xml(sub_elem, "\t" + line_padding))
+                result_list.append(self.json2xml(
+                    sub_elem, "\t" + line_padding))
                 result_list.append("%s</%s>" % (line_padding, origin_obj))
 
             return "\n".join(result_list)
@@ -92,7 +97,8 @@ class IrActionsServer(models.Model):
                         self.json2xml(sub_obj, line_padding, tag_name))
                 else:
                     result_list.append("%s<%s>" % (line_padding, tag_name))
-                    result_list.append(self.json2xml(sub_obj, "\t" + line_padding))
+                    result_list.append(self.json2xml(
+                        sub_obj, "\t" + line_padding))
                     result_list.append("%s</%s>" % (line_padding, tag_name))
 
             return "\n".join(result_list)
