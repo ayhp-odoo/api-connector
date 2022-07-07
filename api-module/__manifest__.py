@@ -19,6 +19,7 @@
     ],
     'data': [
         'views/view_base_automation_inherit.xml',
+        'security/ir.model.access.csv',
     ],
     'license': 'OPL-1',
 }
