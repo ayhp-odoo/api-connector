@@ -30,15 +30,14 @@ class IrActionsServer(models.Model):
     def create(self, vals_list):
         res = super(IrActionsServer, self).create(vals_list)
         for val in vals_list:
-            if not val.get('api_name'):
-                raise UserError('API must have a name')
-            if not val.get('url'):
-                raise UserError('API must have a url')
-            xml = val.get('payload')
-            headers = {'Content-Type': val.get('content_type')}
-            api_result = requests.post(
-                val.get('url'),  data=xml, headers=headers)
-            print(api_result.json())
+            if val.get('state') == 'api_call':    
+                if not val.get('url'):
+                    raise UserError('API must have a url')
+                xml = val.get('payload')
+                headers = {'Content-Type': val.get('content_type')}
+                api_result = requests.post(
+                    val.get('url'),  data=xml, headers=headers)
+                print(api_result.json())
         return res
 
     def _run_action_api_call(self, eval_context=None):
