@@ -1,5 +1,6 @@
 from collections import defaultdict
 import requests
+import json
 
 from odoo import models, fields
 from odoo.exceptions import UserError
@@ -34,24 +35,38 @@ class IrActionsServer(models.Model):
     def create(self, vals_list):
         res = super(IrActionsServer, self).create(vals_list)
         for val in vals_list:
-            if val.get('state') == 'api_call':
+            if val.get('state') == 'api_call':    
                 if not val.get('url'):
                     raise UserError('API must have a url')
-                xml = val.get('payload')
-                headers = {'Content-Type': val.get('content_type')}
-                api_result = requests.post(
-                    val.get('url'),  data=xml, headers=headers)
-                print(api_result.json())
+                try:
+                    api_result = None
+                    headers = json.loads(val.get('headers'))
+                    if val.get('method') == 'get':
+                        url = val.get('url')
+                        api_result = requests.get(url, headers)                        
+                    else:
+                        headers = {'Content-Type': val.get('content_type')}
+                        xml = val.get('payload')
+                        api_result = requests.post(val.get('url'),  data=xml, headers=headers)
+                    print(api_result.json())
+                except Exception as e:
+                    raise UserError(e)
         return res
 
     def _run_action_api_call(self, eval_context=None):
-        headers = {'Content-Type': self.content_type}
-        xml = self.payload
-        if self.method == 'get':
-            api_result = requests.get(self.url,  self.body)
-        else:
-            api_result = requests.post(self.url,  data=xml, headers=headers)
-            raise UserError(api_result.json())
+        try:
+            api_result = None
+            headers = json.loads(self.headers)
+            if self.method == 'get':
+                url = self.url
+                api_result = requests.get(url, headers)                        
+            else:
+                headers = {'Content-Type': self.content_type}
+                xml = self.payload
+                api_result = requests.post(self.url,  data=xml, headers=headers)
+            print(api_result.json())
+        except Exception as e:
+            raise UserError(e)
 
     def xml2dict(self, t):
         d = {t.tag: {} if t.attrib else None}

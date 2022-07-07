@@ -24,9 +24,6 @@
                             <field name="headers" widget="ace"/>
                         </group>
                     </form>
-                    
-                    
-                    
                 </page>
                 <page string="Payload" name="api_payload" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
                     <field name="payload" widget="ace" options="{'mode': 'xml'}"/>
