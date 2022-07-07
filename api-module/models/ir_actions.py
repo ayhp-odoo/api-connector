@@ -24,11 +24,10 @@ class IrActionsServer(models.Model):
         string='Content Type',
         required=True,
     )
-    headers = fields.One2many(
-        string='Headers', inverse_name='server_id', comodel_name='api.header')
-
     # headers = fields.One2many(
-    #     string='Headers', inverse_name='server_id', comodel_name='ir.server.object.lines')
+    #     string='Headers', inverse_name='server_id', comodel_name='api.header')
+    headers = fields.Text(
+        string='Headers')
 
     payload = fields.Text()
 
@@ -105,12 +104,3 @@ class IrActionsServer(models.Model):
             return "\n".join(result_list)
 
         return "%s%s" % (line_padding, json_obj)
-
-
-# class ApiHeader(models.Model):
-#     _name = 'api.header'
-#     _description = 'API Header'
-
-#     key = fields.Char(string='Key')
-#     value = fields.Char(string='Value')
-#     api_id = fields.Many2one(string='API', comodel_name='ir.actions.server')
