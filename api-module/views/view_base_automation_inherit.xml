@@ -9,19 +9,23 @@
            <field name='arch' type='xml'>
             <notebook position="inside">
                 <page string="API headers" name="api_headers" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
-                    <group name="General info">
+                    <group>
                        <group>
                         <field name="description"/>
-                       </group>
-                    </group>
-                    <group name="API headers">
-                       <group>
                         <field name="url"/>
+                    </group>
+                    <group>
                         <field name="method"/>
                         <field name="content_type"/>
-                        <field name="headers" />
                        </group>
                     </group>
+                    <form>
+                        <group>
+                            <field name="headers" />
+                        </group>
+                    </form>
+                    
+                    
                     
                 </page>
                 <page string="API Payload" name="api_payload" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'api_call')]}">
