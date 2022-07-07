@@ -1,9 +1,7 @@
 from collections import defaultdict
-from xml.etree import cElementTree as ET
 import requests
-import json
 
-from odoo import models, fields, api
+from odoo import models, fields
 from odoo.exceptions import UserError
 
 
@@ -13,7 +11,6 @@ class IrActionsServer(models.Model):
     state = fields.Selection(selection_add=[(
         'api_call', 'Call External API')], ondelete={'api_call': 'cascade'})
 
-    api_name = fields.Char(string='Name')
     description = fields.Text(string='Description')
     url = fields.Char(string='URL')
     method = fields.Selection(
@@ -27,19 +24,8 @@ class IrActionsServer(models.Model):
         string='Content Type',
         required=True,
     )
-    headers = fields.Text(string='Headers')
-    body = fields.Text(string='Body')
-    response_type = fields.Selection(
-        selection=[('json', 'JSON'), ('text', 'Text')],
-        string='Response Type',
-        required=True,
-        default='json'
-    )
-
-    query = fields.Char(string='Query')
-    access_key = fields.Char(string='Acces Token')
-    payload = fields.Text('payload')  # , render_engine='qweb',
-    # translate=True, sanitize=False)
+    headers = fields.One2many(string='Headers', inverse_name='api_id' ,comodel_name='api.header')
+    payload = fields.Text() 
 
     def create(self, vals_list):
         res = super(IrActionsServer, self).create(vals_list)
@@ -56,22 +42,13 @@ class IrActionsServer(models.Model):
         return res
 
     def _run_action_api_call(self, eval_context=None):
-        # headers = {
-        #      #'access_key': '062d2886e5ba140c2fb8cbd740c751de',
-        #      #'query': 'Mexico City'
-        #      #'access_key': self.access_key,
-        #      #'query': self.query,
-        #      'Content-type': 'text/xml',
-        #      #'body': self.payload
-        # }
         headers = {'Content-Type': self.content_type}
         xml = self.payload
         if self.method == 'get':
             api_result = requests.get(self.url,  self.body)
         else:
             api_result = requests.post(self.url,  data=xml, headers=headers)
-            raise UserError(api_result.json().get(
-                'recived data').get('note').get('to')[0])
+            raise UserError(api_result.json())
 
     def xml2dict(t):
         d = {t.tag: {} if t.attrib else None}
