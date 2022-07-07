@@ -24,7 +24,7 @@ class IrActionsServer(models.Model):
         string='Content Type',
         required=True,
     )
-    headers = fields.One2many(string='Headers', comodel_name='api.header')
+    headers = fields.One2many(string='Headers', inverse_name='api_id' ,comodel_name='api.header')
     payload = fields.Text() 
 
     def create(self, vals_list):
