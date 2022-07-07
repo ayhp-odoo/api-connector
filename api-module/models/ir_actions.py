@@ -40,7 +40,6 @@ class IrActionsServer(models.Model):
                     raise UserError('API must have a url')
                 xml = val.get('payload')
                 headers = {'Content-Type': val.get('content_type')}
-                print(f"HEADERRRRRRRRRRRRRRSSSSSS {val.get('headers')}")
                 api_result = requests.post(
                     val.get('url'),  data=xml, headers=headers)
                 print(api_result.json())
