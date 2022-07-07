@@ -50,12 +50,12 @@ class IrActionsServer(models.Model):
             api_result = requests.post(self.url,  data=xml, headers=headers)
             raise UserError(api_result.json())
 
-    def xml2dict(t):
+    def xml2dict(self,t):
         d = {t.tag: {} if t.attrib else None}
         children = list(t)
         if children:
             dd = defaultdict(list)
-            for dc in map(xml2dict, children):
+            for dc in map(self.xml2dict, children):
                 for k, v in dc.items():
                     dd[k].append(v)
             d = {t.tag: {k: v[0] if len(v) == 1 else v
@@ -72,7 +72,7 @@ class IrActionsServer(models.Model):
                 d[t.tag] = text
         return d
 
-    def json2xml(json_obj, line_padding="", origin_obj=None):
+    def json2xml(self,json_obj, line_padding="", origin_obj=None):
         result_list = list()
 
         json_obj_type = type(json_obj)
@@ -80,7 +80,7 @@ class IrActionsServer(models.Model):
         if json_obj_type is list:
             for sub_elem in json_obj:
                 result_list.append("%s<%s>" % (line_padding, origin_obj))
-                result_list.append(json2xml(sub_elem, "\t" + line_padding))
+                result_list.append(self.json2xml(sub_elem, "\t" + line_padding))
                 result_list.append("%s</%s>" % (line_padding, origin_obj))
 
             return "\n".join(result_list)
@@ -90,10 +90,10 @@ class IrActionsServer(models.Model):
                 sub_obj = json_obj[tag_name]
                 if type(sub_obj) is list:
                     result_list.append(
-                        json2xml(sub_obj, line_padding, tag_name))
+                        self.json2xml(sub_obj, line_padding, tag_name))
                 else:
                     result_list.append("%s<%s>" % (line_padding, tag_name))
-                    result_list.append(json2xml(sub_obj, "\t" + line_padding))
+                    result_list.append(self.json2xml(sub_obj, "\t" + line_padding))
                     result_list.append("%s</%s>" % (line_padding, tag_name))
 
             return "\n".join(result_list)
